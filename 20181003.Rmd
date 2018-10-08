@@ -1,0 +1,29 @@
+---
+title: "2018-10-03"
+output: html_notebook
+---
+
+```{r}
+lubridate::ymd("2017/01/31")
+```
+
+```{r}
+library(lubridate)
+d <- seq(ymd("2001-01-01"),ymd("2018-09-01"),by="month")#sequence，產生具有順序的東西,by以多少為單位
+e <- seq(ymd("2001-01-01"),ymd("2018-09-01"),by="quarter")
+f <- seq(ymd("2001-01-01"),ymd("2018-09-01"),by="year")
+```
+str_sub(string,start = 1L,end = -1L)start and end must be an int
+```{r}
+hw <-"Hadley Wickham"
+library(stringr)
+str_sub(hw,1,6)
+str_sub(hw,end = 6)
+str_sub(hw,8,14)
+```
+```{r}
+library(readr)
+library(stringr)
+studentID <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/studentID.csv")
+```
+
