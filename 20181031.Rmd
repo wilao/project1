@@ -1,0 +1,26 @@
+---
+title: "20181031"
+output: html_notebook
+---
+
+```{r}
+library(googlesheets)
+gs_auth(new_user = TRUE)4/hgB1iXCjhBm8ZrEIi7QI-ywpjD94Yyjkfkj3WxPQUjt4Nhnh7p-VPCM
+```
+```{r}
+library(readr)
+student <- read_csv("https://raw.githubusercontent.com/tpemartin/course-107-1-programming-for-data-science/master/data/student.csv")
+library(dplyr)
+library(magrittr)
+student %<>% mutate(
+  身高級距=cut(身高,c(0,150,155,160,165,170,175,180,185,200)))
+```
+```{r}
+
+```
+
+
+```{r}
+levels(student$身高級距 =cut[身高,c(小個子,小個子,小個子,小個子,小個子,中個子,中個子,高個子,高個子)])
+```
+
