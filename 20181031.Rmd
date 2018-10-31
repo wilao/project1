@@ -8,6 +8,40 @@ library(googlesheets)
 gs_auth(new_user = TRUE)4/hgB1iXCjhBm8ZrEIi7QI-ywpjD94Yyjkfkj3WxPQUjt4Nhnh7p-VPCM
 ```
 ```{r}
+gsSurvey<-gs_key("1mC9bnxj11NCNoOCw0Vmn4nxERbHtLjeGo9v9C9b2GDE")  #download sheet information as an object
+classSurvey<-gs_read(gsSurvey,ws=1) #access the 1st worksheet
+```
+```{r}
+class(classSurvey)
+```
+```{r}
+StuDF <- data.frame(
+  StuID=c(1,2,3,4,5),
+  name=c("小明","大雄","胖虎","小新","大白"),
+  score=c(80,60,90,70,50)
+  )
+StuDF 
+```
+```{r}
+names(StuDF) 
+colnames(StuDF)
+```
+```{r}
+rownames(StuDF)
+```
+```{r}
+StuDF[1,2]
+StuDF[,2]
+StuDF[1,]
+StuDF[c(1,4),]
+StuDF[c(1,4),c(2,3)]
+```
+```{r}
+StuDF[c(1,4),]
+StuDF[-c(1,4),]
+```
+
+```{r}
 library(readr)
 student <- read_csv("https://raw.githubusercontent.com/tpemartin/course-107-1-programming-for-data-science/master/data/student.csv")
 library(dplyr)
@@ -16,11 +50,10 @@ student %<>% mutate(
   身高級距=cut(身高,c(0,150,155,160,165,170,175,180,185,200)))
 ```
 ```{r}
-
-```
-
-
-```{r}
 levels(student$身高級距 =cut[身高,c(小個子,小個子,小個子,小個子,小個子,中個子,中個子,高個子,高個子)])
+```
+```{r}
+StuDF$成績[c(4)]
+StuDF$成績[c(4)] <- 75
 ```
 
