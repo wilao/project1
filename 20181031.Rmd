@@ -89,3 +89,27 @@ levels(student$身高級距)<-c(“小個子”,“小個子”,“小個子”�
 levels(student$身高級距)[c(1:3)] <- "(0,160]"
 levels(student$身高級距)
 ```
+
+
+#課堂練習
+```{r}
+library(googlesheets)
+gs_auth(new_user = TRUE)#匯入googlesheet
+gsSurvey<-gs_key("1mC9bnxj11NCNoOCw0Vmn4nxERbHtLjeGo9v9C9b2GDE")  #download sheet information as an object
+classSurvey<-gs_read(gsSurvey,ws=1) #access the 1st worksheet
+```
+
+```{r}
+#1.1
+dim(classSurvey)
+nrow(classSurvey)#有多少觀察值
+ncol(classSurvey)#有多少變數
+```
+```{r}
+#1.2
+#學號轉成character
+#學號取出字串第2~4為並存為  年級
+#年級轉成factor
+#年級進行generic replacement
+```
+
