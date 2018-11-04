@@ -5,44 +5,71 @@ output: html_notebook
 
 ```{r}
 library(googlesheets)
-gs_auth(new_user = TRUE)4/hgB1iXCjhBm8ZrEIi7QI-ywpjD94Yyjkfkj3WxPQUjt4Nhnh7p-VPCM
-```
-```{r}
+gs_auth(new_user = TRUE)#匯入googlesheet
 gsSurvey<-gs_key("1mC9bnxj11NCNoOCw0Vmn4nxERbHtLjeGo9v9C9b2GDE")  #download sheet information as an object
 classSurvey<-gs_read(gsSurvey,ws=1) #access the 1st worksheet
 ```
 ```{r}
-class(classSurvey)
+library(stringr)
+cc <- (str_sub(classSurvey$居住地行政區,1,3))#選取範圍從第1個字到第3個字
+classSurvey[cc == "台北市",3]#選取第3行印出名字
+classSurvey[cc == "台北市",c("姓名")]
+```
+$ applied to element with names.
+
+只能用於有「名字」的元素，且一次只能取一個元素。
+
+若物件(object)本身為vector，則無法用來取出它的元素。
+
+[] applied to element with or without names.
+
+物件為data frame或矩陣matrix時，用[i,j]來取，其中i,j分別代表元素（們）所在行(row)及列(column)。
+
+若為一維向量，用[i]來取。
+
+若為多維度的陣列(array)則會有更多元素位置指標，如三維空間會有[i,j,k]等。
+
+i, j, k …可用數字，也可用名稱。
+
+```{r}
+jj <- c("a","b","c")
+jj[2]#找陣列的第2個值
 ```
 ```{r}
-StuDF <- data.frame(
+names(gsSurvey)#有17個子集合
+```
+```{r}
+StuDF <- data.frame(#data frame資料框
+                    #自己創建一個data.frame
   StuID=c(1,2,3,4,5),
-  name=c("小明","大雄","胖虎","小新","大白"),
-  score=c(80,60,90,70,50)
+  name=c("小明","大雄","胖虎","小新","大白"),#遇到文字被當成類別資料(factor)來設定
+  score=c(80,60,90,70,50),
+  fame=c(50,65,75,85,95),
+  stringsAsFactors = F#讓文字不會轉成factor
   )
-StuDF 
+StuDF
+```
+
+```{r}
+StuDF$StuID
+StuDF[,c("StuID")]
+StuDF$name
+StuDF[,c("StuID","name")]
 ```
 ```{r}
-names(StuDF) 
-colnames(StuDF)
+names(StuDF) <- c("學號","姓名","成績","聲望")#將原名稱改為新名稱
+names(StuDF)
 ```
 ```{r}
-rownames(StuDF)
-```
-```{r}
-StuDF[1,2]
-StuDF[,2]
-StuDF[1,]
-StuDF[c(1,4),]
-StuDF[c(1,4),c(2,3)]
-```
-```{r}
-StuDF[c(1,4),]
-StuDF[-c(1,4),]
+names(StuDF)[2] <- c("姓名")#單改某像物件
+names(StuDF)
 ```
 
 ```{r}
 library(readr)
+#library(lubridate)
+#library(stats)
+#library(base)
 student <- read_csv("https://raw.githubusercontent.com/tpemartin/course-107-1-programming-for-data-science/master/data/student.csv")
 library(dplyr)
 library(magrittr)
@@ -50,10 +77,15 @@ student %<>% mutate(
   身高級距=cut(身高,c(0,150,155,160,165,170,175,180,185,200)))
 ```
 ```{r}
-levels(student$身高級距 =cut[身高,c(小個子,小個子,小個子,小個子,小個子,中個子,中個子,高個子,高個子)])
-```
-```{r}
-StuDF$成績[c(4)]
-StuDF$成績[c(4)] <- 75
+levels(student$身高級距)
 ```
 
+```{r}
+levels(student$身高級距)<-c(“小個子”,“小個子”,“小個子”，“小個子”，“小個子”，“中個子”，“中個子”,“高個子”,“高個子”)
+```
+
+
+```{r}
+levels(student$身高級距)[c(1:3)] <- "(0,160]"
+levels(student$身高級距)
+```
