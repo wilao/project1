@@ -68,8 +68,8 @@ StuDF[c(T,F,F,F,F),c(F,T,F)]
 StuDF[c(T,F,F,T,F),]#取出特定位置之資料
 ```
 ```{r}
-(StuDF$score >= 80)
-(StuDF$name == "小新")
+which(StuDF$score >= 80)
+which(StuDF$name == "小新")
 ```
 
 
