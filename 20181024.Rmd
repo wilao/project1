@@ -1,0 +1,75 @@
+---
+title: "20181024"
+output: html_notebook
+---
+```{r}
+library(googlesheets)
+gs_auth(new_user = TRUE)#匯入googlesheet
+gsSurvey<-gs_key("1mC9bnxj11NCNoOCw0Vmn4nxERbHtLjeGo9v9C9b2GDE")  #download sheet information as an object
+classSurvey<-gs_read(gsSurvey,ws=1) #access the 1st worksheet
+```
+```{r}
+class(classSurvey)#classSurvey的屬性查詢:data.frame
+```
+```{r}
+colnames(classSurvey)
+rownames(classSurvey)
+```
+
+```{r}
+class(classSurvey)
+StuDF <- data.frame(#data frame資料框
+                    #自己創建一個data.frame
+  StuID=c(1,2,3,4,5),
+  name=c("小明","大雄","胖虎","小新","大白"),#遇到文字被當成類別資料(factor)來設定
+  score=c(80,60,90,70,50),
+  fame=c(50,65,75,85,95)
+  )
+StuDF 
+```
+```{r}
+as.character(StuDF$name) -> StuDF$name#將StuDF$name引入，並將他從類別(factor)轉到文字(character)
+```
+
+```{r}
+class(classSurvey)
+StuDF <- data.frame(#data frame資料框
+                    #自己創建一個data.frame
+  StuID=c(1,2,3,4,5),
+  name=c("小明","大雄","胖虎","小新","大白"),#遇到文字被當成類別資料(factor)來設定
+  score=c(80,60,90,70,50),
+  fame=c(50,65,75,85,95),
+  stringsAsFactors = F#讓文字不會轉成factor
+  )
+StuDF 
+```
+```{r}
+names(StuDF) #檢視有甚麼項目
+colnames(StuDF) #檢視有甚麼項目
+rownames(StuDF)#檢視有甚麼項目
+```
+```{r}
+StuDF[1,2]#[]為陣列[row index-->,column index||ˇ]
+StuDF[,2]
+StuDF[1,]
+StuDF[c(1,4),]
+StuDF[c(1,4),c(2,3)]
+StuDF[c(1:3,5),]#用:選取連續值
+```
+```{r}
+StuDF[c(1,4),]
+StuDF[-c(1,4),]#去掉1,4不顯示
+```
+```{r}
+head(classSurvey,10)#head內定看到前6筆資料,後面加數字可增加資料顯示數
+```
+```{r}
+StuDF[c(T,F,F,F,F),c(F,T,F)]
+StuDF[c(T,F,F,T,F),]#取出特定位置之資料
+```
+```{r}
+(StuDF$score >= 80)
+(StuDF$name == "小新")
+```
+
+
