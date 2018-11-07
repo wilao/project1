@@ -1,0 +1,145 @@
+---
+title: "20181107"
+output: html_notebook
+---
+```{r}
+library(stringr)
+library(lubridate)
+民國年月<-c("099/01","099/02","099/03")
+
+# 1
+str_c("1",民國年月,"/01")->民國年月
+
+# 2
+lubridate::ymd(民國年月) -> 民國年月
+
+# 3
+民國年月 + years(911)
+```
+```{r}
+民國年月<-c("099/01","099/02","099/03")
+
+library(dplyr)
+# 1
+民國年月 %>%    #  %>%  將左邊物件丟到右邊
+  str_c("1", . ,"/01") %>%
+  ymd %>%   #可省略括號內第一個直
+  { . + years(911) }
+```
+```{r}
+library(dplyr)
+library(readr)
+collegeData <- read_csv("https://quality.data.gov.tw/dq_download_csv.php?nid=6231&md5_url=dda8fca407131483c1d8cbf3d61cf793")
+```
+```{r}
+library(dplyr)
+mutate(
+  collegeData,
+  學校代碼=as.factor(學校代碼),#將學校代碼及學校名稱轉為factor
+  學校名稱=as.factor(學校名稱)
+  ) -> collegeData2#並轉存至collegedata2
+```
+```{r}
+collegeData$學校名稱 <-
+  as.factor(collegeData$學校名稱)
+collegeData$`日間∕進修別`<-
+  as.factor(collegeData$`日間∕進修別`)
+```
+```{r}
+collegeData %>%
+  mutate(.,#可直接省略
+  學校代碼=as.factor(學校代碼),
+  學校名稱=as.factor(學校名稱)
+         ) -> collegeData2
+```
+
+```{r}
+collegeData %>%
+  mutate(
+  學校代碼=as.factor(學校代碼),
+  學校名稱=as.factor(學校名稱)
+         ) -> collegeData2
+```
+```{r}
+library(stringr)
+collegeData%>%
+  mutate(
+    一年級男生 = str_replace(一年級男生,",",""),#將數字內的，取代成空格
+    一年級女生 = str_replace(一年級女生,",","")
+  )
+%>%
+  mutate(
+    一年級男生=as.numeric(一年級男生),
+    一年級女生=as.numeric(一年級女生)
+  ) -> collegeData3
+```
+
+```{r}
+collegeData %>%
+  mutate(
+    一年級男生 = as.numeric(一年級男生),
+    一年級女生 = as.numeric(一年級女生),#無法解讀，
+    等級別 =  as.factor(等級別)
+  ) ->collegeData
+```
+```{r}
+library(readr)
+cl<-locale(grouping_mark = ",") # 創造cl來描述千分位符號使用","的習慣場景
+collegeData %>% 
+  mutate(
+    `日間∕進修別`=as.factor(`日間∕進修別`),#若跑不出來就重新執行最原始的程式
+    等級別=as.factor(等級別),
+    一年級男生=parse_number(一年級男生,na = c("",NA,"-"),locale=cl),
+    一年級女生=parse_number(一年級女生,na = c("",NA,"-"),locale=cl)
+  ) -> collegeData4
+```
+
+```{r}
+problems(collegeData4$一年級男生)#找可能發生的問題點
+```
+```{r}
+collegeData %>% 
+  mutate(
+    `日間∕進修別`=as.factor(`日間∕進修別`),
+    等級別=as.factor(等級別),
+    一年級男生=parse_number(一年級男生,locale=cl),
+    一年級女生=parse_number(一年級女生,locale=cl),
+    一年級男生每千人=一年級男生/1000,
+    一年級女生每千人=一年級女生/1000
+    ) -> collegeData6
+```
+
+```{r}
+collegeData %>%
+  select(一年級男生,一年級女生,
+              二年級男生, 二年級女生) -> college1stYearData
+```
+
+```{r}
+library(stringr)
+college1stYearData %>%
+  mutate_all(funs(parse_number(.,locale=cl))) ->
+  college1stYearDataNumeric
+```
+```{r}
+college1stYearDataNumeric %>%
+  mutate_all(
+    funs(
+      每百人=./100,
+      每千人=./1000
+    )
+  )
+```
+```{r}
+college1stYearDataNumeric %>% colnames()
+```
+```{r}
+collegeData %>% mutate_at(
+  vars(contains("生")),
+  funs(parse_number(.,locale=cl))
+) -> college1stYearDataA
+
+#college1stYearDataA %>%
+ #select(一年級男生,一年級女生)
+```
+
