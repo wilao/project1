@@ -1,0 +1,138 @@
+---
+title: "2018-12-05"
+output: html_notebook
+---
+```{r}
+library(readr)
+libraryData <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/library100_102.csv")
+```
+```{r}
+library(dplyr)
+library(lubridate)
+libraryData %>%
+  mutate(
+    學院=as.factor(學院),
+    書籍館藏地=as.factor(書籍館藏地),
+    書籍類別=as.factor(書籍類別),
+    借閱時間=ymd_hms(借閱時間,tz="Asia/Taipei")
+  ) -> libraryData#此程式通下程式
+```
+```{r}
+libraryData %>%
+  mutate_at(
+    vars(學院,書籍館藏地,書籍類別),
+    funs(
+     as.factor(.)
+    )
+  ) -> libraryData
+ libraryData %>%
+  mutate(
+    借閱時間=ymd_hms(借閱時間,tz="Asia/Taipei")
+  ) -> libraryData
+```
+
+```{r}
+## 1
+max(libraryData$讀者借閱冊數)-> maxNumber
+min(libraryData$讀者借閱冊數)-> minNumber
+paste0("最大值： ",maxNumber, " 最小值： ",minNumber)
+
+## 2
+max(libraryData$入學年)-> maxNumber
+min(libraryData$入學年)-> minNumber
+paste0("最大值： ",maxNumber, " 最小值： ",minNumber)
+
+## 3
+max(libraryData$書籍上架年月)-> maxNumber
+min(libraryData$書籍上架年月)-> minNumber
+paste0("最大值： ",maxNumber, " 最小值： ",minNumber)#此程式通下2程式
+```
+```{r}
+minMaxFun <- function(x){
+  max(x)-> maxNumber
+  min(x)-> minNumber
+  paste0("最大值： ",maxNumber, " 最小值： ",minNumber)
+}#父類別
+```
+```{r}
+minMaxFun(libraryData$讀者借閱冊數)->a1
+a1
+minMaxFun(libraryData$入學年)->a2
+a2
+minMaxFun(libraryData$書籍上架年月)->a3#子類別
+a3
+```
+```{r}
+minMaxFun2 <- function(x){
+  max(x)-> maxNumber
+  min(x)-> minNumber
+  paste0("最大值： ",maxNumber, " 最小值： ",minNumber)-> output
+  return(maxNumber)#另一個方法並回傳maxnumber
+}
+minMaxFun2(libraryData$讀者借閱冊數)-> outputValue2
+outputValue2
+```
+```{r}
+not_numeric<-function(x){
+  !is.numeric(x)
+}
+not_numeric(libraryData$讀者借閱冊數)
+```
+找出人文學院的子樣本
+```{r}
+findmyycollege<-function(x){
+(libraryData$學院 == x)->logindex
+libraryData[logindex,]->subsample
+return(subsample)
+}#父類別
+```
+```{r}
+findmyycollege("人文學院")->n
+n
+```
+
+```{r}
+libraryData %>%
+  select(讀者借閱冊數,書籍出版日期) 
+```
+dplyr::select( ) 用來選出資料集中所要的變數
+```{r}
+## grouping
+findmyycollege("人文學院")-> sample1
+## group feature summary
+nrow(sample1)#number of row
+ findmyycollege("社會科學院") -> sample2
+nrow(sample2)#number of row
+```
+dplyr::summarise( )用來計算變數的值所能產生的敍述統計值，如「平均值」，「最大/小值」等。
+```{r}
+libraryData %>%
+  select(讀者借閱冊數,書籍出版日期) %>%
+  summarise(
+    讀者平均借閱冊數=mean(讀者借閱冊數),
+    最小書籍出版日期=min(書籍出版日期,na.rm=T),
+    最大書籍出版日期=max(書籍出版日期,na.rm=T)
+  )#會跑出NA代表有些值是空白
+```
+select_if(.data, .preidcate, .funs)
+where
+
+.predicate is a function that returns a single TRUE or FALSE.
+
+.funs is a collection of functions to be applied to variable names; if not specified, nothing is done on varible names.
+```{r}
+library(summarytools)
+libraryData %>%
+  select_if(
+    is.numeric#數字性
+  ) %>% summarytools::dfSummary() %>% summarytools::view(.)
+```
+
+```{r}
+library(summarytools)
+libraryData %>%
+  select_if(
+   not_numeric#非數字性
+  ) %>% summarytools::dfSummary() %>% summarytools::view(.)
+```
+
